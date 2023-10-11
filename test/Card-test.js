@@ -1,14 +1,14 @@
 const chai = require('chai');
 const expect = chai.expect;
 
-const { createCard } = require('../src/card');
+const { createCard, evaluateGuess } = require('../src/card');
 
 describe('card', function() {
-  it.skip('should be a function', function() {
+  it('should be a function', function() {
     expect(createCard).to.be.a('function');
   });
 
-  it.skip('should create a card and its properties', function() {
+  it('should create a card and its properties', function() {
     const card = createCard(1, 'What allows you to define a set of related information using key-value pairs?', ['object', 'array', 'function'], 'object');
     
     expect(card.id).to.equal(1);
@@ -16,4 +16,23 @@ describe('card', function() {
     expect(card.answers).to.deep.equal(['object', 'array', 'function']);
     expect(card.correctAnswer).to.equal('object');
   });  
+});
+
+describe('evaluateGuess', function() {
+  it('should be a function', function() {
+    expect(evaluateGuess).to.be.a('function');
+  });
+
+  it('should evaluate if the guess is correct', function() {
+    const card = createCard(2, 'What animal is a lion?', ['cow', 'lion', 'duck', 'pigeon'], 'lion');
+    const guessAnswer = evaluateGuess('lion', card)
+    
+    expect(guessAnswer).to.equal('Correct!');
+  });
+
+  it('should evaluate if the guess is incorrect', function() {
+    const card2 = createCard(3, 'How was the 90s surfer', ['sad', 'angry', 'bodacious', 'crass'], 'bodacious');
+    const guessAnswer2 = evaluateGuess('sad', card2)
+    expect(guessAnswer2).to.equal('Incorrect!');
+  });
 });
