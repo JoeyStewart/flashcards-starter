@@ -1,5 +1,5 @@
-const chai = require('chai');
-const expect = chai.expect;
+const { assert, expect } = require('chai');
+
 
 const { createCard, evaluateGuess, createDeck, createRound} = require('../src/card');
 
