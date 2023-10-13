@@ -1,7 +1,7 @@
 const chai = require('chai');
 const expect = chai.expect;
 
-const { createCard, evaluateGuess } = require('../src/card');
+const { createCard, evaluateGuess, createDeck, createRound} = require('../src/card');
 
 describe('card', function() {
   it('should be a function', function() {
@@ -34,5 +34,55 @@ describe('evaluateGuess', function() {
     const card2 = createCard(3, 'How was the 90s surfer', ['sad', 'angry', 'bodacious', 'crass'], 'bodacious');
     const guessAnswer2 = evaluateGuess('sad', card2)
     expect(guessAnswer2).to.equal('Incorrect!');
+  });
+});
+
+describe('createDeck', function(){
+  it('should create a deck from an array of card data', function() {
+      const cardData = [
+          ['Question 1', ['answer1', 'answer2', 'answer3'], 'answer1'],
+          ['Question 2', ['answer1', 'answer2', 'answer3'], 'answer3'],
+      ];
+      const deck = createDeck(cardData);
+      assert.strictEqual(deck.length, 2);
+  });
+});
+
+describe('createRound', function(){
+  it('should create a round with initial values',function() {
+      const deck = createDeck([['question1', ['answer1'], 'A']]);
+      const round = createRound(deck);
+      assert.strictEqual(round.deck, deck);
+      assert.strictEqual(round.currentCard, deck[0]);
+      assert.strictEqual(round.turns, 0);
+      assert.deepStrictEqual(round.incorrectGuesses, []);
+  });
+
+  it('should correctly track turns, current card, and incorrect guesses', function(){
+      const deck = createDeck([['question1', ['answer1'], 'answer1'], ['question2', ['answer2'], 'answer2']]);
+      const round = createRound(deck);
+      round.takeTurn('B');
+      assert.strictEqual(round.turns, 1);
+      assert.strictEqual(round.currentCard, deck[1]);
+      assert.deepStrictEqual(round.incorrectGuesses, []);
+      round.takeTurn('answer1');
+      assert.strictEqual(round.turns, 2);
+      assert.deepStrictEqual(round.incorrectGuesses, [2]);
+  });
+
+  it('should calculate the percentage of correct answers', function(){
+      const deck = createDeck([['question1', ['answer1'], 'answer1'], ['question2', ['answer2'], 'answer2']]);
+      const round = createRound(deck);
+      round.takeTurn('answer2');
+      assert.strictEqual(round.calculatePercentCorrect(), 0);
+      round.takeTurn('answer1');
+      assert.strictEqual(round.calculatePercentCorrect(), 50);
+  });
+
+  it('should end the round with a correct message', function(){
+      const deck = createDeck([['card1', ['card2'], 'card3']]);
+      const round = createRound(deck);
+      round.takeTurn('turn');
+      assert.strictEqual(round.endRound(), 'The round has ended with 100% questioned answered correctly.');
   });
 });
