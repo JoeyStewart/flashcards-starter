@@ -27,7 +27,7 @@ describe('evaluateGuess', function() {
     const card = createCard(2, 'What animal is a lion?', ['cow', 'lion', 'duck', 'pigeon'], 'lion');
     const guessAnswer = evaluateGuess('lion', card)
     
-    expect(guessAnswer).to.equal('Correct!');
+    expect(guessAnswer).to.be.equal('Correct!'); 
   });
 
   it('should evaluate if the guess is incorrect', function() {
@@ -48,7 +48,8 @@ describe('createDeck', function(){
           ['Question 2', ['answer1', 'answer2', 'answer3'], 'answer3'],
       ];
       const deck = createDeck(cardData);
-      assert.strictEqual(deck.length, 2);
+      expect(deck).to.equal(deck.length, 2);
+      //expected [ Array(2) ] to equal 2
   });
 });
 
@@ -60,10 +61,11 @@ describe('createRound', function(){
   it.skip('should create a round with initial values',function() {
       const deck = createDeck([['question1', ['answer1'], 'A']]);
       const round = createRound(deck);
-      assert.strictEqual(round.deck, deck);
-      assert.strictEqual(round.currentCard, deck[0]);
-      assert.strictEqual(round.turns, 0);
-      assert.deepStrictEqual(round.incorrectGuesses, []);
+      expect(round.deck).to.be(deck);
+      expect(round.currentCard).to.be(deck[0]);
+      expect(round.turns).to.be(0);
+      expect(round.incorrectGuesses).to.be([]);
+      //expect not defined
   });
 
   it.skip('should correctly track turns, current card, and incorrect guesses', function(){
@@ -76,6 +78,8 @@ describe('createRound', function(){
       round.takeTurn('answer1');
       assert.strictEqual(round.turns, 2);
       assert.deepStrictEqual(round.incorrectGuesses, [2]);
+      //assert not defined
+      //TDD unfinished
   });
 
   it.skip('should calculate the percentage of correct answers', function(){
@@ -85,6 +89,8 @@ describe('createRound', function(){
       assert.strictEqual(round.calculatePercentCorrect(), 0);
       round.takeTurn('answer1');
       assert.strictEqual(round.calculatePercentCorrect(), 50);
+      //assert not defined
+      //TDD unfinished
   });
 
   it.skip('should end the round with a correct message', function(){
